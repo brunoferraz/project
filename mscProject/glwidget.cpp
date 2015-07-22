@@ -10,16 +10,23 @@ GLWidget::~GLWidget()
 }
 void GLWidget::initialize()
 {
+    Tucano::QtTrackballWidget::initialize();
+    Tucano::QtTrackballWidget::openMesh("../../tucano-master/samples/models/toy.ply");
 
+    phong.setShadersDir("./effects/shaders/");
+    phong.initialize();
 }
 
 void GLWidget::paintGL()
 {
     makeCurrent();
 
-    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glClearColor(0.3, 0.3, 0.3, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST);
+
+    phong.render(mesh, camera, light_trackball);
+
     camera.render();
 }

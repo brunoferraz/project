@@ -35,6 +35,8 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     glwidget.h \
+    $$TUCANO_PATH/../build/bin/effects/phongshader.hpp \
     ../tucano-master/src/utils/qttrackballwidget.hpp
 
 FORMS    += mainwindow.ui
+

@@ -14,6 +14,9 @@ class GLWidget : public Tucano::QtTrackballWidget
 public:
     explicit GLWidget(QWidget *parent);
     ~GLWidget();
+
+    Effects::Phong phong;
+
     void initialize();
     void paintGL();
 
