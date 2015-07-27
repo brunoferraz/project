@@ -11,7 +11,8 @@ GLWidget::~GLWidget()
 void GLWidget::initialize()
 {
     Tucano::QtTrackballWidget::initialize();
-    Tucano::QtTrackballWidget::openMesh("../../tucano-master/samples/models/toy.ply");
+//    Tucano::QtTrackballWidget::openMesh("../../tucano-master/samples/models/toy.ply");
+      Tucano::QtTrackballWidget::openMesh("urna/urna.ply");
 
     phong.setShadersDir("./effects/shaders/");
     phong.initialize();

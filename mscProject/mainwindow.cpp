@@ -7,6 +7,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->widget->initialize();
+
+    PhotoMesh photoMesh;
+    QString str = "urna/objs/urna.mlp";
+    photoMesh.initializeFromMeshLab(str);
 }
 
 MainWindow::~MainWindow()

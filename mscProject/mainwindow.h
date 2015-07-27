@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <util/util.h>
+#include <QString>
+#include <QtXml>
+#include <photo/photomesh.h>
 
 namespace Ui {
 class MainWindow;

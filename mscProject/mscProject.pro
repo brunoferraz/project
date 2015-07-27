@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT       += core gui opengl xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,12 +31,18 @@ QMAKE_CXXFLAGS += -DTUCANODEBUG
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glwidget.cpp
+    glwidget.cpp \
+    util/util.cpp \
+    photo/photomesh.cpp \
+    photo/photocamera.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
     $$TUCANO_PATH/../build/bin/effects/phongshader.hpp \
-    ../tucano-master/src/utils/qttrackballwidget.hpp
+    ../tucano-master/src/utils/qttrackballwidget.hpp \
+    util/util.h \
+    photo/photomesh.h \
+    photo/photocamera.h
 
 FORMS    += mainwindow.ui
 
