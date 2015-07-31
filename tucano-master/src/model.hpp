@@ -122,8 +122,8 @@ public:
      */
     void normalizeModelMatrix (void)
     {
-        model_matrix.scale(scale);
-        model_matrix.translate(-centroid);
+//        model_matrix.scale(scale);
+//        model_matrix.translate(-centroid);
     }
 
 

@@ -375,7 +375,7 @@ public:
             temp++;
         }
 
-        scale = 1.0/max(max(xMax-xMin, yMax-yMin), zMax-zMin);
+//        scale = 1.0/max(max(xMax-xMin, yMax-yMin), zMax-zMin);
 
         float centerX = (xMax+xMin)/2.0;
         float centerY = (yMax+yMin)/2.0;
@@ -383,11 +383,11 @@ public:
         objectCenter = Eigen::Vector3f(centerX, centerY, centerZ);
 
         // compute the centroid (different from the box center)
-        centroid = Eigen::Vector3f::Zero();
-        for(unsigned int i = 0; i < numberOfVertices; i++) {
-            centroid = centroid + vert[i].head(3);//Eigen::Vector3f(vert[i][0], vert[i][1], vert[i][2]);
-        }
-        centroid = centroid / numberOfVertices;
+//        centroid = Eigen::Vector3f::Zero();
+//        for(unsigned int i = 0; i < numberOfVertices; i++) {
+//            centroid = centroid + vert[i].head(3);//Eigen::Vector3f(vert[i][0], vert[i][1], vert[i][2]);
+//        }
+//        centroid = centroid / numberOfVertices;
 
         // compute the radius of the bounding sphere
         // most distance point from the centroid
@@ -396,7 +396,7 @@ public:
             radius = max(radius, ( vert[i].head(3) - centroid ).norm());
         }
 
-        scale = 1.0/radius;
+//        scale = 1.0/radius;
 
     }
 

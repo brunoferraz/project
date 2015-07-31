@@ -46,12 +46,14 @@ bool PhotoMesh::initializeFromMeshLab(QString path)
     for(int i =0; i < total; i++){
         RasterInfo *info = new RasterInfo();
         info->label         = rasterTree.at(i).toElement().attribute("label").toStdString();
+        std::cout << info->label << std::endl;
         info->filename      = rasterTree.at(i).firstChild().nextSibling().toElement().attribute("fileName").toStdString();
         PhotoCamera cam;
         QDomElement camDom  = rasterTree.at(i).firstChildElement();
         cam.initializeFromMeshLab(camDom);
         info->photoCamera    = cam;
         rasterGroup.push_back(info);
+        std::cout << "" << std::endl;
     }
     return true;
 }

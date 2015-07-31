@@ -16,8 +16,8 @@ PhotoCamera::PhotoCamera()
     oneOverDx           = 1/pixelSize(0);
     oneOverDy           = 1/pixelSize(1);
 
-    buildIntrinsic();
-    buildExtrinsic();
+//    buildIntrinsic();
+//    buildExtrinsic();
 }
 
 bool PhotoCamera::initializeFromMeshLab(QDomElement &element)
@@ -57,6 +57,8 @@ bool PhotoCamera::initializeFromMeshLab(QDomElement &element)
     //PixelSize;
     attTemp = element.attribute("PixelSizeMm").split(" ");
     pixelSize << attTemp.at(0).toFloat(), attTemp.at(1).toFloat();
+    oneOverDx           = 1/pixelSize(0);
+    oneOverDy           = 1/pixelSize(1);
     //std::cout << pixelSize.transpose() << std::endl;
 
     //Focal
@@ -75,6 +77,9 @@ void PhotoCamera::buildIntrinsic()
 {
     //Projection Matrix
     Eigen::Matrix3f Mi;
+    cout << "focal length: " << focalLength << endl;
+    cout << "1/dx: " << oneOverDx << endl;
+    cout << "1/dy: " << oneOverDy << endl;
     Mi << -focalLength*oneOverDx, 0, principalPoint(0),
             0, -focalLength*oneOverDy, principalPoint(1),
             0, 0, 1;
@@ -89,14 +94,13 @@ void PhotoCamera::buildExtrinsic()
 
 void PhotoCamera::buildProjection()
 {
-//    float fov = ((2*atan((camera.getHeight()/2.0)/(-camera.intrinsic(1, 1)))*(180.0/PI)));
-//    float ratio = camera.getWidth()/(float)camera.getHeight() * (camera.getPixelSize()(0)/camera.getPixelSize()(1));
-//    projectionMatrix = perspective(fov, ratio, _near, _far);
-      float fov     = (2 * std::atan(getHeight()/2.0)/-intrinsicMatrix(1,1)*(180.0/M_PI));
+      float fov     = (2 * std::atan((getHeight()/2.0)/-intrinsicMatrix(1,1)));
       float ratio   = getWidth()/(getHeight() * pixelSize(0)/pixelSize(1));
       float f       =  1/ tan(fov/2);
       float near    = 0.1;
-      float far     = 10;
+      float far     = 10000;
+      cout << "fov: " << fov << endl;
+      cout << "ratio: " << ratio << endl;
 
       Eigen::Matrix4f perspective = Eigen::Matrix4f::Identity();
       perspective(0,0) = f/ratio;

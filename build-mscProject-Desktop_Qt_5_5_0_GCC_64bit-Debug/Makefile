@@ -1334,6 +1334,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qdir.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
+		../tucano-master/src/utils/qttrackballwidget.hpp \
 		../mscProject/photo/photomesh.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		../mscProject/photo/photocamera.h \
@@ -2376,6 +2377,7 @@ compiler_uic_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qdir.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
+		../tucano-master/src/utils/qttrackballwidget.hpp \
 		../mscProject/photo/photomesh.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		../mscProject/photo/photocamera.h \
@@ -3287,7 +3289,69 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
-		../build/ui/ui_mainwindow.h
+		../build/ui/ui_mainwindow.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QAction \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qaction.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qactiongroup.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QButtonGroup \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QHeaderView \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qheaderview.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractitemview.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qstyleoption.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qvalidator.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qslider.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractslider.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qstyle.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qtabbar.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qrubberband.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QWidget \
+		../mscProject/glwidget.h \
+		../tucano-master/effects/phongshader.hpp \
+		../tucano-master/src/tucano.hpp \
+		../tucano-master/src/effect.hpp \
+		../tucano-master/src/bufferobject.hpp \
+		../tucano-master/src/texture.hpp \
+		../tucano-master/src/texturemanager.hpp \
+		../tucano-master/src/framebuffer.hpp \
+		../tucano-master/src/mesh.hpp \
+		../tucano-master/src/model.hpp \
+		../tucano-master/src/utils/qtflycamerawidget.hpp \
+		../tucano-master/src/utils/objimporter.hpp \
+		../tucano-master/src/utils/plyimporter.hpp \
+		../tucano-master/src/utils/rply.hpp \
+		../tucano-master/src/utils/flycamera.hpp \
+		../tucano-master/src/shapes/coordinateaxes.hpp \
+		../tucano-master/src/shapes/arrow.hpp \
+		../tucano-master/src/utils/trackball.hpp \
+		../../../../Qt/5.5/gcc_64/include/QtOpenGL/QGLWidget \
+		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qgl.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qopengl.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/qt_windows.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qopengles2ext.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qopenglext.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpaintengine.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpainter.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qpen.h \
+		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qglcolormap.h \
+		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qtopenglglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QSurfaceFormat \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qsurfaceformat.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QMouseEvent \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QFileDialog \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qfiledialog.h \
+		../tucano-master/src/utils/qttrackballwidget.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/mainwindow.o ../mscProject/mainwindow.cpp
 
 ../build/obj/glwidget.o: ../mscProject/glwidget.cpp ../mscProject/glwidget.h \
@@ -3630,6 +3694,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtCore/qdir.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
+		../tucano-master/src/utils/qttrackballwidget.hpp \
 		../mscProject/photo/photomesh.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		../mscProject/photo/photocamera.h \
