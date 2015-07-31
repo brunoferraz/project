@@ -7,10 +7,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->widget->initialize();
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *ev)
+{
+    if(ev->key() == Qt::Key_Left){
+        ui->widget->prevCamera();
+    }else if(ev->key() == Qt::Key_Right){
+        ui->widget->nextCamera();
+    }
 }

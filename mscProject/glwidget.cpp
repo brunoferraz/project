@@ -1,7 +1,7 @@
 #include "glwidget.h"
 GLWidget::GLWidget(QWidget *parent) : Tucano::QtTrackballWidget(parent)
 {
-
+    currentCamera = 0;
 }
 
 GLWidget::~GLWidget()
@@ -18,35 +18,15 @@ void GLWidget::initialize()
 
     Tucano::QtTrackballWidget::openMesh("urna/urna.ply");
 
-    phong.setShadersDir("./effects/shaders/");
+    string shaders_dir("./effects/shaders/");
+
+    phong.setShadersDir(shaders_dir);
     phong.initialize();
-    PhotoCamera &cam = photoMesh.rasterGroup.at(0)->photoCamera;
-    //    camera.initOpenGLMatrices();
-    float scale = mesh.getScale();
-    cout << "scale: " << scale << endl;
-    mesh.setModelMatrix(Eigen::Affine3f::Identity());
-    Eigen::Affine3f view = cam.extrinsicMatrix;
-    calibrationCamera.setViewport(Eigen::Vector2f(this->size().width(), this->size().height()));
 
-    camera.setProjectionMatrix(cam.projectionMatrix);
-    camera.setViewMatrix(view);
-    //camera.applyScaleToViewMatrix(mesh.getScale());
+    renderTexture.setShadersDir(shaders_dir);
+    renderTexture.initialize();
 
-
-    calibrationCamera.setProjectionMatrix(cam.projectionMatrix);
-    cout << "projection: " << endl << *(calibrationCamera.projectionMatrix()) << endl;
-//    view.matrix() = view.matrix() * scale;
-//    view.matrix()(3,3) = 1;
-    scale = 1;
-//    mesh.modelMatrix()->matrix() *= ((1 -scale) + 1);
-//    view.scale(scale);
-//    view.translation() *= scale;
-//    view.matrix()(3,3) = 1;
-    cout << "view scale: " << endl << view.matrix() << endl;
-    calibrationCamera.setViewMatrix(view);
-    //calibrationCamera.translate(Eigen::Vector3f(0, 0, 200));
-
-    //mesh.modelMatrix().matrix() = Eigen::Matrix4f::Identity();
+    changeCamera(0);
 }
 
 void GLWidget::paintGL()
@@ -59,6 +39,32 @@ void GLWidget::paintGL()
     glEnable(GL_DEPTH_TEST);
 
     phong.render(mesh, calibrationCamera, light_trackball);
+
+    Eigen::Vector2i viewport (this->width(), this->height());
     camera.render();
-//    std::cout << camera.getProjectionMatrix() << std::endl;
+//    renderTexture.renderTexture(image_Texture, viewport);
+}
+
+void GLWidget::changeCamera(int c)
+{
+    int next = currentCamera + c;
+    if(next >= photoMesh.rasterGroup.count()){
+        next = 0;
+    }else if(next < 0){
+        next = photoMesh.rasterGroup.count()-1;
+    }
+    currentCamera = next;
+    PhotoCamera &cam = photoMesh.rasterGroup.at(currentCamera)->photoCamera;
+    RasterInfo *info = photoMesh.rasterGroup.at(currentCamera);
+    mesh.setModelMatrix(Eigen::Affine3f::Identity());
+    Eigen::Affine3f view = cam.extrinsicMatrix;
+    calibrationCamera.setViewport(Eigen::Vector2f(this->size().width(), this->size().height()));
+    calibrationCamera.setProjectionMatrix(cam.projectionMatrix);
+    calibrationCamera.setViewMatrix(view);
+    QString path = QString::fromStdString(info->filename);
+    QImage img(path);
+    QImage glImage = QGLWidget::convertToGLFormat(img);
+    image_Texture.create(glImage.width(), glImage.height(), glImage.bits());
+
+    update();
 }

@@ -8,7 +8,8 @@
 #include <utils/qtflycamerawidget.hpp>
 #include <utils/qttrackballwidget.hpp>
 #include <photo/photomesh.h>
-
+#include <QImage>
+#include <rendertexture.hpp>
 
 class GLWidget : public Tucano::QtTrackballWidget
 {
@@ -20,11 +21,21 @@ public:
     Effects::Phong phong;
     PhotoMesh photoMesh;
     Tucano::Camera calibrationCamera;
+    Mesh backgroud;
+
+    int currentCamera;
 
     void initialize();
     void paintGL();
+    inline void nextCamera(){changeCamera(1);}
+    inline void prevCamera(){changeCamera(-1);}
 
 signals:
+private:
+    void changeCamera(int c);
+
+    Effects::RenderTexture renderTexture;
+    Texture image_Texture;
 
 public slots:
 };

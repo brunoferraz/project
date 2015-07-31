@@ -6,6 +6,8 @@
 #include <QString>
 #include <QtXml>
 #include <photo/photomesh.h>
+#include <QKeyEvent>
+#include <QDebug>
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +23,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+protected:
+    void keyReleaseEvent(QKeyEvent *ev);
 };
 
 #endif // MAINWINDOW_H
