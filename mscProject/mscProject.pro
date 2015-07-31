@@ -42,7 +42,8 @@ HEADERS  += mainwindow.h \
     ../tucano-master/src/utils/qttrackballwidget.hpp \
     util/util.h \
     photo/photomesh.h \
-    photo/photocamera.h
+    photo/photocamera.h \
+    ../tucano-master/src/utils/qtflycamerawidget.hpp
 
 FORMS    += mainwindow.ui
 

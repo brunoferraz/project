@@ -25,7 +25,7 @@ public:
     Eigen::Matrix4f     modelMatrix;
     std::string         filename;
     std::string         label;
-    QList<RasterInfo *>   rasterGroup;
+    QList<RasterInfo *> rasterGroup;
 
     bool initializeFromMeshLab(QString path);
 };

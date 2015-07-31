@@ -5,7 +5,9 @@
 
 #include <QWidget>
 #include <phongshader.hpp>
+#include <utils/qtflycamerawidget.hpp>
 #include <utils/qttrackballwidget.hpp>
+#include <photo/photomesh.h>
 
 
 class GLWidget : public Tucano::QtTrackballWidget
@@ -16,6 +18,8 @@ public:
     ~GLWidget();
 
     Effects::Phong phong;
+    PhotoMesh photoMesh;
+    Tucano::Camera calibrationCamera;
 
     void initialize();
     void paintGL();
