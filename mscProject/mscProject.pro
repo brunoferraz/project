@@ -38,12 +38,18 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     glwidget.h \
-    $$TUCANO_PATH/../build/bin/effects/phongshader.hpp \
-    ../tucano-master/src/utils/qttrackballwidget.hpp \
+    $$BUILDDIR/bin/effects/phongshader.hpp \
+    $$BUILDDIR/build/bin/effects/rendertexture.hpp \
+    $$TUCANO_PATH/src/utils/qttrackballwidget.hpp \
     util/util.h \
     photo/photomesh.h \
     photo/photocamera.h \
-    ../tucano-master/src/utils/qtflycamerawidget.hpp
+    $$TUCANO_PATH/src/utils/qtflycamerawidget.hpp
+
+OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
+               $$BUILDDIR/bin/effects/shaders/rendertexture.frag \
+               $$BUILDDIR/bin/effects/shaders/phongshader.vert \
+               $$BUILDDIR/bin/effects/shaders/phongshader.frag \
 
 FORMS    += mainwindow.ui
 

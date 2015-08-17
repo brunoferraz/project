@@ -39,6 +39,16 @@ QDomDocument *Util::openXmlFileDom(const char *path)
 
 void Util::xmlDomParser(QDomDocument *xml)
 {
-   // qDebug() << xml->toElement();
+    // qDebug() << xml->toElement();
+}
+
+void Util::saveFile(const QString path, const QString text)
+{
+    QFile file(path);
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(&file);
+    out << text;
+       // optional, as QFile destructor will already do it:
+    file.close();
 }
 

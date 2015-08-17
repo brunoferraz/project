@@ -77,9 +77,9 @@ void PhotoCamera::buildIntrinsic()
 {
     //Projection Matrix
     Eigen::Matrix3f Mi;
-    cout << "focal length: " << focalLength << endl;
-    cout << "1/dx: " << oneOverDx << endl;
-    cout << "1/dy: " << oneOverDy << endl;
+//    cout << "focal length: " << focalLength << endl;
+//    cout << "1/dx: " << oneOverDx << endl;
+//    cout << "1/dy: " << oneOverDy << endl;
     Mi << -focalLength*oneOverDx, 0, principalPoint(0),
             0, -focalLength*oneOverDy, principalPoint(1),
             0, 0, 1;
@@ -99,8 +99,8 @@ void PhotoCamera::buildProjection()
       float f       =  1/ tan(fov/2);
       float near    = 0.1;
       float far     = 10000;
-      cout << "fov: " << fov << endl;
-      cout << "ratio: " << ratio << endl;
+//      cout << "fov: " << fov << endl;
+//      cout << "ratio: " << ratio << endl;
 
       Eigen::Matrix4f perspective = Eigen::Matrix4f::Identity();
       perspective(0,0) = f/ratio;

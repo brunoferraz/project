@@ -68,7 +68,7 @@ public:
     void renderTexture (Texture& tex, Eigen::Vector2i viewport)
     {
         glViewport(0, 0, viewport[0], viewport[1]);
-
+//        quad.modelMatrix()->translation() = Eigen::Affine3f(0, 0, -1.0);
         shader.bind();
         shader.setUniform("imageTexture", tex.bind());
         shader.setUniform("viewportSize", viewport);

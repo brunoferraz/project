@@ -200,6 +200,7 @@ DIST          = ../../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../mscProject/mscProject.pro ../mscProject/mainwindow.h \
 		../mscProject/glwidget.h \
 		../build/bin/effects/phongshader.hpp \
+		../build/build/bin/effects/rendertexture.hpp \
 		../tucano-master/src/utils/qttrackballwidget.hpp \
 		../mscProject/util/util.h \
 		../mscProject/photo/photomesh.h \
@@ -528,7 +529,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../mscProject/mainwindow.h ../mscProject/glwidget.h ../build/bin/effects/phongshader.hpp ../tucano-master/src/utils/qttrackballwidget.hpp ../mscProject/util/util.h ../mscProject/photo/photomesh.h ../mscProject/photo/photocamera.h ../tucano-master/src/utils/qtflycamerawidget.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../mscProject/mainwindow.h ../mscProject/glwidget.h ../build/bin/effects/phongshader.hpp ../build/build/bin/effects/rendertexture.hpp ../tucano-master/src/utils/qttrackballwidget.hpp ../mscProject/util/util.h ../mscProject/photo/photomesh.h ../mscProject/photo/photocamera.h ../tucano-master/src/utils/qtflycamerawidget.hpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mscProject/main.cpp ../mscProject/mainwindow.cpp ../mscProject/glwidget.cpp ../mscProject/util/util.cpp ../mscProject/photo/photomesh.cpp ../mscProject/photo/photocamera.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mscProject/mainwindow.ui $(DISTDIR)/
 
@@ -674,6 +675,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomDocument \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qdom.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QtXml \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QtXmlDepends \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QtCore \
@@ -992,6 +994,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
 		../mscProject/mainwindow.h
 	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore -I. ../mscProject/mainwindow.h -o ../build/moc/moc_mainwindow.cpp
 
@@ -1353,6 +1356,9 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qmessagebox.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qxmlstream.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QImage \
+		../tucano-master/effects/rendertexture.hpp \
 		../mscProject/glwidget.h
 	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore -I. ../mscProject/glwidget.h -o ../build/moc/moc_glwidget.cpp
 
@@ -2395,7 +2401,10 @@ compiler_uic_clean:
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QMessageBox \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qmessagebox.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qxmlstream.h \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader
+		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QImage \
+		../tucano-master/effects/rendertexture.hpp
 	/home/bruno/Qt/5.5/gcc_64/bin/uic ../mscProject/mainwindow.ui -o ../build/ui/ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
@@ -2527,6 +2536,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomDocument \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qdom.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QtXml \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QtXmlDepends \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QtCore \
@@ -2845,6 +2855,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qapplication.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdesktopwidget.h \
@@ -2971,6 +2982,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomDocument \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qdom.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QtXml \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QtXmlDepends \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QtCore \
@@ -3289,6 +3301,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
 		../build/ui/ui_mainwindow.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/QVariant \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QAction \
@@ -3351,7 +3364,9 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtGui/QMouseEvent \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QFileDialog \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qfiledialog.h \
-		../tucano-master/src/utils/qttrackballwidget.hpp
+		../tucano-master/src/utils/qttrackballwidget.hpp \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QImage \
+		../tucano-master/effects/rendertexture.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/mainwindow.o ../mscProject/mainwindow.cpp
 
 ../build/obj/glwidget.o: ../mscProject/glwidget.cpp ../mscProject/glwidget.h \
@@ -3712,7 +3727,10 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QMessageBox \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qmessagebox.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qxmlstream.h \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader
+		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QImage \
+		../tucano-master/effects/rendertexture.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/glwidget.o ../mscProject/glwidget.cpp
 
 ../build/obj/util.o: ../mscProject/util/util.cpp ../mscProject/util/util.h \
@@ -3828,7 +3846,8 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomDocument \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qdom.h \
-		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlglobal.h
+		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlglobal.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/util.o ../mscProject/util/util.cpp
 
 ../build/obj/photomesh.o: ../mscProject/photo/photomesh.cpp ../mscProject/photo/photomesh.h \
@@ -4150,7 +4169,8 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtGui/qvector2d.h \
 		../../../../Qt/5.5/gcc_64/include/QtGui/qtouchdevice.h \
 		../../../../Qt/5.5/gcc_64/include/QtCore/qxmlstream.h \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader
+		../../../../Qt/5.5/gcc_64/include/QtCore/QXmlStreamReader \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/photomesh.o ../mscProject/photo/photomesh.cpp
 
 ../build/obj/photocamera.o: ../mscProject/photo/photocamera.cpp ../mscProject/photo/photocamera.h \

@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QXmlStreamReader>
 #include <QDomDocument>
+#include <QTextStream>
 
 class Util
 {
@@ -18,7 +19,7 @@ public:
     static QXmlStreamReader *openXmlFileStream(const char* path);
     static QDomDocument *openXmlFileDom(const char* path);
     static void xmlDomParser(QDomDocument* xml);
-
+    static void saveFile(const QString path, const QString text);
 };
 
 #endif // UTIL_H

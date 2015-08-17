@@ -9,5 +9,5 @@ void main()
 {
   vec2 texCoord = vec2(gl_FragCoord.xy/vec2(viewportSize.xy));
   vec3 result = texture(imageTexture, texCoord).rgb;
-  out_Color = vec4(result, 1.0);
+  out_Color = vec4(result, 0.5);
 }

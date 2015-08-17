@@ -27,13 +27,16 @@ public:
 
     void initialize();
     void paintGL();
-    inline void nextCamera(){changeCamera(1);}
-    inline void prevCamera(){changeCamera(-1);}
-
+    inline void nextCamera(){ photoMesh.nextPhoto();
+                              photoMesh.calibrateCamera(calibrationCamera);
+                              update();
+                            }
+    inline void prevCamera(){ photoMesh.prevPhoto();
+                              photoMesh.calibrateCamera(calibrationCamera);
+                              update();
+                            }
 signals:
 private:
-    void changeCamera(int c);
-
     Effects::RenderTexture renderTexture;
     Texture image_Texture;
 

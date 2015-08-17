@@ -38,12 +38,11 @@ public:
 
     void setDistortion(Eigen::Vector2f& d);
     void setRadialDistortion(Eigen::Vector2f& d);
+
     Eigen::Vector4f center(const Eigen::MatrixXf& camera);
     Eigen::Vector2f project(const Eigen::Vector3f& point);
     Eigen::Vector3f unproject(const Eigen::Vector2f& pixel);
     Eigen::MatrixXf getPseudoInverse();
-
-
 };
 
 #endif // PHOTOCAMERA_H

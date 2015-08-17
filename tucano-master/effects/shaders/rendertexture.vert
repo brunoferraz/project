@@ -4,5 +4,6 @@ in vec4 in_Position;
 
 void main()
 {
-  gl_Position = in_Position;
+  vec4 vert = in_Position;
+  gl_Position = vert;
 }
