@@ -30,12 +30,7 @@ class PhotoMesh
 {
 public:
     PhotoMesh();
-    Eigen::Matrix4f     modelMatrix;
-    std::string         filename;
-    std::string         label;
-    QList<RasterInfo *> rasterGroup;
 
-    Tucano::Mesh mesh;
 
     bool initializeFromMeshLab(QString path, QString photoPath = "");
 
@@ -43,6 +38,7 @@ public:
     Eigen::Affine3f *getViewMatrix();
     Eigen::Matrix4f *getModelMatrix();
     Tucano::Texture *getBaseTexture();
+    Tucano::Mesh    *getMesh();
 
     void calibrateCamera(Tucano::Camera &c);
 
@@ -51,7 +47,12 @@ public:
     inline void prevPhoto(){changePhotoReferenceTo(-1);}
 
 private:
-    int currentPhotoIndex;
+    Eigen::Matrix4f     modelMatrix;
+    std::string         filename;
+    std::string         label;
+    QList<RasterInfo *> rasterGroup;
+    Tucano::Mesh        mesh;
+    int                 currentPhotoIndex;
     void openMesh(string filename);
 
 };

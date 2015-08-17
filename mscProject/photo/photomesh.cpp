@@ -31,7 +31,7 @@ bool PhotoMesh::initializeFromMeshLab(QString path, QString photoPath)
     filename = root.firstChildElement().firstChildElement().attribute("filename").toStdString();
     label    = root.firstChildElement().firstChildElement().attribute("label").toStdString();
 
-    openMesh("./urna/objs/"+filename);
+    openMesh("./urna/"+filename);
 
     std::stringstream m(root.firstChildElement().firstChildElement().firstChildElement().text().toStdString());
     int i = 0;
@@ -85,9 +85,15 @@ Tucano::Texture *PhotoMesh::getBaseTexture()
     return &rasterGroup.at(currentPhotoIndex)->baseTexture;
 }
 
+Tucano::Mesh *PhotoMesh::getMesh()
+{
+    return &mesh;
+}
+
 void PhotoMesh::calibrateCamera(Tucano::Camera &c)
 {
     //Receive the camera and calibrate it using info from de current raster image
+    //VIEW PORT MUST BE SET BASED ON YOUR WIDGET SIZE FROM OUTSIDE
     PhotoCamera &cam = rasterGroup.at(currentPhotoIndex)->photoCamera;
     RasterInfo *info = rasterGroup.at(currentPhotoIndex);
 
