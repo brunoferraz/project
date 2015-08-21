@@ -23,23 +23,7 @@ uniform bool has_color;
 
 void main(void)
 {
-//        mat4 modelViewMatrix = viewMatrix * modelMatrix;
-
-//        mat4 normalMatrix = transpose(inverse(modelViewMatrix));
-//    normal = normalize(vec3(normalMatrix * vec4(in_Normal,0.0)).xyz);
-
-//        vert = modelViewMatrix * in_Position;
-
-//        depth = in_Position.z;
-
-//        texCoords = in_TexCoords;
-
-//        gl_Position = (projectionMatrix * modelViewMatrix) * in_Position;
-
-//    if (has_color)
-//        color = in_Color;
-//    else
-//        color = default_color;
+//    mat4 modelViewMatrix = viewMatrix * modelMatrix;
+//    vert = projectionMatrix * modelMatrix * viewMatrix * in_Position;
     gl_Position = in_Position;
-
 }

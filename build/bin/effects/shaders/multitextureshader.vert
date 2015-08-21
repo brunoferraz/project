@@ -7,7 +7,7 @@ in vec4 in_Color;
 
 out vec4 vert;
 
-uniform vec2 in_viewPort;
+
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;

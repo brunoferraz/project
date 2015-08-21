@@ -38,7 +38,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     glwidget.h \
-    $$BUILDDIR/build/bin/effects/rendertexture.hpp \
+    $$BUILDDIR/bin/effects/rendertexture.hpp \
     $$TUCANO_PATH/src/utils/qttrackballwidget.hpp \
     util/util.h \
     photo/multiTextureManagerObj.h \
@@ -51,6 +51,8 @@ OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/rendertexture.frag \
                $$BUILDDIR/bin/effects/shaders/phongshader.vert \
                $$BUILDDIR/bin/effects/shaders/phongshader.frag \
+               $$BUILDDIR/bin/effects/shaders/showFbo.vert \
+               $$BUILDDIR/bin/effects/shaders/showFbo.frag \
                $$BUILDDIR/bin/effects/shaders/multitextureshader.vert \
                $$BUILDDIR/bin/effects/shaders/multitextureshader.frag \
 
