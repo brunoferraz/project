@@ -5,7 +5,7 @@
 #include <util/util.h>
 #include <QString>
 #include <QtXml>
-#include <photo/photomesh.h>
+#include <photo/multiTextureManagerObj.h>
 #include <QKeyEvent>
 #include <QDebug>
 

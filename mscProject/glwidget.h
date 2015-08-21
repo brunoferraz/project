@@ -5,9 +5,11 @@
 
 #include <QWidget>
 #include <phongshader.hpp>
+#include <multitextureshader.hpp>
+
 #include <utils/qtflycamerawidget.hpp>
 #include <utils/qttrackballwidget.hpp>
-#include <photo/photomesh.h>
+#include <photo/multiTextureManagerObj.h>
 #include <QImage>
 #include <rendertexture.hpp>
 
@@ -19,7 +21,9 @@ public:
     ~GLWidget();
 
     Effects::Phong phong;
-    PhotoMesh photoMesh;
+    Effects::MultiTexture multi;
+
+    MultiTextureManagerObj multitexture;
     Tucano::Camera calibrationCamera;
     Mesh backgroud;
 
@@ -27,12 +31,12 @@ public:
 
     void initialize();
     void paintGL();
-    inline void nextCamera(){ photoMesh.nextPhoto();
-                              photoMesh.calibrateCamera(calibrationCamera);
+    inline void nextCamera(){ multitexture.nextPhoto();
+                              multitexture.calibrateCamera(calibrationCamera);
                               update();
                             }
-    inline void prevCamera(){ photoMesh.prevPhoto();
-                              photoMesh.calibrateCamera(calibrationCamera);
+    inline void prevCamera(){ multitexture.prevPhoto();
+                              multitexture.calibrateCamera(calibrationCamera);
                               update();
                             }
 signals:

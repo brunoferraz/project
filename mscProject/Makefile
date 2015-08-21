@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_XML_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -DTUCANODEBUG -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I../tucano-master/src -I../tucano-master/effects -I/usr/local/include/eigen3 -I../../../../Qt/5.5/gcc_64/include -I../../../../Qt/5.5/gcc_64/include/QtOpenGL -I../../../../Qt/5.5/gcc_64/include/QtWidgets -I../../../../Qt/5.5/gcc_64/include/QtGui -I../../../../Qt/5.5/gcc_64/include/QtXml -I../../../../Qt/5.5/gcc_64/include/QtCore -I../build/moc -I../build/ui -I../../../../Qt/5.5/gcc_64/mkspecs/linux-g++
+INCPATH       = -I. -I../tucano-master/src -I../tucano-master/effects -I/usr/local/include/eigen3 -I../build/bin/effects -I../../../../Qt/5.5/gcc_64/include -I../../../../Qt/5.5/gcc_64/include/QtOpenGL -I../../../../Qt/5.5/gcc_64/include/QtWidgets -I../../../../Qt/5.5/gcc_64/include/QtGui -I../../../../Qt/5.5/gcc_64/include/QtXml -I../../../../Qt/5.5/gcc_64/include/QtCore -I../build/moc -I../build/ui -I../../../../Qt/5.5/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/bruno/Qt/5.5/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -52,7 +52,7 @@ SOURCES       = main.cpp \
 		mainwindow.cpp \
 		glwidget.cpp \
 		util/util.cpp \
-		photo/photomesh.cpp \
+		photo/multiTextureManagerObj.cpp \
 		photo/photocamera.cpp ../build/moc/moc_mainwindow.cpp \
 		../build/moc/moc_glwidget.cpp \
 		../build/moc/moc_qttrackballwidget.cpp \
@@ -61,7 +61,7 @@ OBJECTS       = ../build/obj/main.o \
 		../build/obj/mainwindow.o \
 		../build/obj/glwidget.o \
 		../build/obj/util.o \
-		../build/obj/photomesh.o \
+		../build/obj/multiTextureManagerObj.o \
 		../build/obj/photocamera.o \
 		../build/obj/moc_mainwindow.o \
 		../build/obj/moc_glwidget.o \
@@ -199,17 +199,18 @@ DIST          = ../../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt/5.5/gcc_64/mkspecs/features/lex.prf \
 		mscProject.pro mainwindow.h \
 		glwidget.h \
-		../build/bin/effects/phongshader.hpp \
 		../build/build/bin/effects/rendertexture.hpp \
 		../tucano-master/src/utils/qttrackballwidget.hpp \
 		util/util.h \
-		photo/photomesh.h \
+		photo/multiTextureManagerObj.h \
 		photo/photocamera.h \
-		../tucano-master/src/utils/qtflycamerawidget.hpp main.cpp \
+		../tucano-master/src/utils/qtflycamerawidget.hpp \
+		../build/bin/effects/phongshader.hpp \
+		../build/bin/effects/multitextureshader.hpp main.cpp \
 		mainwindow.cpp \
 		glwidget.cpp \
 		util/util.cpp \
-		photo/photomesh.cpp \
+		photo/multiTextureManagerObj.cpp \
 		photo/photocamera.cpp
 QMAKE_TARGET  = mscProject
 DESTDIR       = ../build/bin/#avoid trailing-slash linebreak
@@ -529,8 +530,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.h glwidget.h ../build/bin/effects/phongshader.hpp ../build/build/bin/effects/rendertexture.hpp ../tucano-master/src/utils/qttrackballwidget.hpp util/util.h photo/photomesh.h photo/photocamera.h ../tucano-master/src/utils/qtflycamerawidget.hpp $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp mainwindow.cpp glwidget.cpp util/util.cpp photo/photomesh.cpp photo/photocamera.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents mainwindow.h glwidget.h ../build/build/bin/effects/rendertexture.hpp ../tucano-master/src/utils/qttrackballwidget.hpp util/util.h photo/multiTextureManagerObj.h photo/photocamera.h ../tucano-master/src/utils/qtflycamerawidget.hpp ../build/bin/effects/phongshader.hpp ../build/bin/effects/multitextureshader.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp mainwindow.cpp glwidget.cpp util/util.cpp photo/multiTextureManagerObj.cpp photo/photocamera.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -788,236 +789,9 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qtcoreversion.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qxml.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlversion.h \
-		photo/photomesh.h \
-		/usr/local/include/eigen3/Eigen/Eigen \
-		/usr/local/include/eigen3/Eigen/Dense \
-		/usr/local/include/eigen3/Eigen/Core \
-		/usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Macros.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Constants.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Meta.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/StaticAssert.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/XprHelper.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Memory.h \
-		/usr/local/include/eigen3/Eigen/src/Core/NumTraits.h \
-		/usr/local/include/eigen3/Eigen/src/Core/MathFunctions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/GenericPacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/AltiVec/PacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/AltiVec/Complex.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/NEON/PacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/NEON/Complex.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/Default/Settings.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Functors.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DenseBase.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
-		/usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/Core/EigenBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Assign.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/BlasUtil.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DenseStorage.h \
-		/usr/local/include/eigen3/Eigen/src/Core/NestByValue.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ForceAlignedAccess.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ReturnByValue.h \
-		/usr/local/include/eigen3/Eigen/src/Core/NoAlias.h \
-		/usr/local/include/eigen3/Eigen/src/Core/PlainObjectBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Matrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Array.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseBinaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseUnaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseNullaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseUnaryView.h \
-		/usr/local/include/eigen3/Eigen/src/Core/SelfCwiseBinaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Dot.h \
-		/usr/local/include/eigen3/Eigen/src/Core/StableNorm.h \
-		/usr/local/include/eigen3/Eigen/src/Core/MapBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Stride.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Map.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Block.h \
-		/usr/local/include/eigen3/Eigen/src/Core/VectorBlock.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Ref.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Transpose.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DiagonalMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Diagonal.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DiagonalProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/PermutationMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Transpositions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Redux.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Visitor.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Fuzzy.h \
-		/usr/local/include/eigen3/Eigen/src/Core/IO.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Swap.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CommaInitializer.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Flagged.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ProductBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/GeneralProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/TriangularMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/SelfAdjointView.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/Parallelizer.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/CoeffBasedProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/SolveTriangular.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointRank2Update.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularSolverMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularSolverVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/BandMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CoreIterators.h \
-		/usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Select.h \
-		/usr/local/include/eigen3/Eigen/src/Core/VectorwiseOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Random.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Replicate.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Reverse.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ArrayBase.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/ArrayCwiseUnaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/ArrayCwiseBinaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ArrayWrapper.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixVector_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularSolverMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Assign_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/GlobalFunctions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
-		/usr/local/include/eigen3/Eigen/Eigen2Support \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Macros.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Memory.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Meta.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Lazy.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Cwise.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/CwiseOperators.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/TriangularSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Block.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/VectorBlock.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Minor.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/MathFunctions.h \
-		/usr/local/include/eigen3/Eigen/LU \
-		/usr/local/include/eigen3/Eigen/src/misc/Solve.h \
-		/usr/local/include/eigen3/Eigen/src/misc/Kernel.h \
-		/usr/local/include/eigen3/Eigen/src/misc/Image.h \
-		/usr/local/include/eigen3/Eigen/src/LU/FullPivLU.h \
-		/usr/local/include/eigen3/Eigen/src/LU/PartialPivLU.h \
-		/usr/local/include/eigen3/Eigen/src/LU/PartialPivLU_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/LU/Determinant.h \
-		/usr/local/include/eigen3/Eigen/src/LU/Inverse.h \
-		/usr/local/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/LU.h \
-		/usr/local/include/eigen3/Eigen/Cholesky \
-		/usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
-		/usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
-		/usr/local/include/eigen3/Eigen/src/Cholesky/LLT_MKL.h \
-		/usr/local/include/eigen3/Eigen/QR \
-		/usr/local/include/eigen3/Eigen/Jacobi \
-		/usr/local/include/eigen3/Eigen/src/Jacobi/Jacobi.h \
-		/usr/local/include/eigen3/Eigen/Householder \
-		/usr/local/include/eigen3/Eigen/src/Householder/Householder.h \
-		/usr/local/include/eigen3/Eigen/src/Householder/HouseholderSequence.h \
-		/usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h \
-		/usr/local/include/eigen3/Eigen/src/QR/HouseholderQR.h \
-		/usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h \
-		/usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h \
-		/usr/local/include/eigen3/Eigen/src/QR/HouseholderQR_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/QR.h \
-		/usr/local/include/eigen3/Eigen/Eigenvalues \
-		/usr/local/include/eigen3/Eigen/Geometry \
-		/usr/local/include/eigen3/Eigen/SVD \
-		/usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD.h \
-		/usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/SVD.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/EulerAngles.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Homogeneous.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/RotationBase.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Rotation2D.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Quaternion.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/AngleAxis.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Transform.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Translation.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Scaling.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Hyperplane.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/AlignedBox.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Umeyama.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/All.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/RotationBase.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Rotation2D.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Quaternion.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/AngleAxis.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Transform.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Translation.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Scaling.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/AlignedBox.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Hyperplane.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/ParametrizedLine.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_MKL.h \
-		photo/photocamera.h \
-		../tucano-master/src/camera.hpp \
-		../tucano-master/src/shader.hpp \
-		../tucano-master/src/utils/misc.hpp \
-		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
-		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
-		../tucano-master/src/mesh.hpp \
-		../tucano-master/src/model.hpp \
-		../tucano-master/src/utils/objimporter.hpp \
-		../tucano-master/src/utils/plyimporter.hpp \
-		../tucano-master/src/utils/rply.hpp \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/QGLWidget \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qgl.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qopengl.h \
-		../../../../Qt/5.5/gcc_64/include/QtCore/qt_windows.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qopengles2ext.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qopenglext.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qpaintengine.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qpainter.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qtextoption.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qpen.h \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qglcolormap.h \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qtopenglglobal.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/QSurfaceFormat \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qsurfaceformat.h \
-		../tucano-master/src/texture.hpp \
-		../tucano-master/src/texturemanager.hpp \
 		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
 		mainwindow.h
-	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore mainwindow.h -o ../build/moc/moc_mainwindow.cpp
+	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Dropbox/MESTRADO/project/build/bin/effects -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore mainwindow.h -o ../build/moc/moc_mainwindow.cpp
 
 ../build/moc/moc_glwidget.cpp: ../../../../Qt/5.5/gcc_64/include/QtWidgets/QWidget \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qwidget.h \
@@ -1330,6 +1104,7 @@ compiler_moc_header_clean:
 		../tucano-master/src/mesh.hpp \
 		../tucano-master/src/model.hpp \
 		../tucano-master/src/camera.hpp \
+		../build/bin/effects/multitextureshader.hpp \
 		../tucano-master/src/utils/qtflycamerawidget.hpp \
 		../tucano-master/src/utils/objimporter.hpp \
 		../tucano-master/src/utils/plyimporter.hpp \
@@ -1359,7 +1134,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
 		../tucano-master/src/utils/qttrackballwidget.hpp \
-		photo/photomesh.h \
+		photo/multiTextureManagerObj.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		photo/photocamera.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
@@ -1381,7 +1156,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtGui/QImage \
 		../tucano-master/effects/rendertexture.hpp \
 		glwidget.h
-	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore glwidget.h -o ../build/moc/moc_glwidget.cpp
+	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Dropbox/MESTRADO/project/build/bin/effects -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore glwidget.h -o ../build/moc/moc_glwidget.cpp
 
 ../build/moc/moc_qttrackballwidget.cpp: ../tucano-master/src/utils/objimporter.hpp \
 		../tucano-master/src/mesh.hpp \
@@ -1717,7 +1492,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
 		../tucano-master/src/utils/qttrackballwidget.hpp
-	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore ../tucano-master/src/utils/qttrackballwidget.hpp -o ../build/moc/moc_qttrackballwidget.cpp
+	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Dropbox/MESTRADO/project/build/bin/effects -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore ../tucano-master/src/utils/qttrackballwidget.hpp -o ../build/moc/moc_qttrackballwidget.cpp
 
 ../build/moc/moc_qtflycamerawidget.cpp: ../tucano-master/src/utils/objimporter.hpp \
 		../tucano-master/src/mesh.hpp \
@@ -2056,7 +1831,7 @@ compiler_moc_header_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
 		../tucano-master/src/utils/qtflycamerawidget.hpp
-	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore ../tucano-master/src/utils/qtflycamerawidget.hpp -o ../build/moc/moc_qtflycamerawidget.cpp
+	/home/bruno/Qt/5.5/gcc_64/bin/moc $(DEFINES) -I/home/bruno/Qt/5.5/gcc_64/mkspecs/linux-g++ -I/home/bruno/Dropbox/MESTRADO/project/mscProject -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/src -I/home/bruno/Dropbox/MESTRADO/project/tucano-master/effects -I/usr/local/include/eigen3 -I/home/bruno/Dropbox/MESTRADO/project/build/bin/effects -I/home/bruno/Qt/5.5/gcc_64/include -I/home/bruno/Qt/5.5/gcc_64/include/QtOpenGL -I/home/bruno/Qt/5.5/gcc_64/include/QtWidgets -I/home/bruno/Qt/5.5/gcc_64/include/QtGui -I/home/bruno/Qt/5.5/gcc_64/include/QtXml -I/home/bruno/Qt/5.5/gcc_64/include/QtCore ../tucano-master/src/utils/qtflycamerawidget.hpp -o ../build/moc/moc_qtflycamerawidget.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -2376,6 +2151,7 @@ compiler_uic_clean:
 		../tucano-master/src/mesh.hpp \
 		../tucano-master/src/model.hpp \
 		../tucano-master/src/camera.hpp \
+		../build/bin/effects/multitextureshader.hpp \
 		../tucano-master/src/utils/qtflycamerawidget.hpp \
 		../tucano-master/src/utils/objimporter.hpp \
 		../tucano-master/src/utils/plyimporter.hpp \
@@ -2405,7 +2181,7 @@ compiler_uic_clean:
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
 		../tucano-master/src/utils/qttrackballwidget.hpp \
-		photo/photomesh.h \
+		photo/multiTextureManagerObj.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		photo/photocamera.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
@@ -2670,233 +2446,6 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtCore/qtcoreversion.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qxml.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlversion.h \
-		photo/photomesh.h \
-		/usr/local/include/eigen3/Eigen/Eigen \
-		/usr/local/include/eigen3/Eigen/Dense \
-		/usr/local/include/eigen3/Eigen/Core \
-		/usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Macros.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Constants.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Meta.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/StaticAssert.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/XprHelper.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/Memory.h \
-		/usr/local/include/eigen3/Eigen/src/Core/NumTraits.h \
-		/usr/local/include/eigen3/Eigen/src/Core/MathFunctions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/GenericPacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/AltiVec/PacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/AltiVec/Complex.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/NEON/PacketMath.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/NEON/Complex.h \
-		/usr/local/include/eigen3/Eigen/src/Core/arch/Default/Settings.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Functors.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DenseBase.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
-		/usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/Core/EigenBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Assign.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/BlasUtil.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DenseStorage.h \
-		/usr/local/include/eigen3/Eigen/src/Core/NestByValue.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ForceAlignedAccess.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ReturnByValue.h \
-		/usr/local/include/eigen3/Eigen/src/Core/NoAlias.h \
-		/usr/local/include/eigen3/Eigen/src/Core/PlainObjectBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Matrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Array.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseBinaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseUnaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseNullaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CwiseUnaryView.h \
-		/usr/local/include/eigen3/Eigen/src/Core/SelfCwiseBinaryOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Dot.h \
-		/usr/local/include/eigen3/Eigen/src/Core/StableNorm.h \
-		/usr/local/include/eigen3/Eigen/src/Core/MapBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Stride.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Map.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Block.h \
-		/usr/local/include/eigen3/Eigen/src/Core/VectorBlock.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Ref.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Transpose.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DiagonalMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Diagonal.h \
-		/usr/local/include/eigen3/Eigen/src/Core/DiagonalProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/PermutationMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Transpositions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Redux.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Visitor.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Fuzzy.h \
-		/usr/local/include/eigen3/Eigen/src/Core/IO.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Swap.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CommaInitializer.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Flagged.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ProductBase.h \
-		/usr/local/include/eigen3/Eigen/src/Core/GeneralProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/TriangularMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/SelfAdjointView.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/Parallelizer.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/CoeffBasedProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/SolveTriangular.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointProduct.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointRank2Update.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularSolverMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularSolverVector.h \
-		/usr/local/include/eigen3/Eigen/src/Core/BandMatrix.h \
-		/usr/local/include/eigen3/Eigen/src/Core/CoreIterators.h \
-		/usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Select.h \
-		/usr/local/include/eigen3/Eigen/src/Core/VectorwiseOp.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Random.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Replicate.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Reverse.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ArrayBase.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/ArrayCwiseUnaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/plugins/ArrayCwiseBinaryOps.h \
-		/usr/local/include/eigen3/Eigen/src/Core/ArrayWrapper.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixVector_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/products/TriangularSolverMatrix_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/Assign_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Core/GlobalFunctions.h \
-		/usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
-		/usr/local/include/eigen3/Eigen/Eigen2Support \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Macros.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Memory.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Meta.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Lazy.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Cwise.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/CwiseOperators.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/TriangularSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Block.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/VectorBlock.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Minor.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/MathFunctions.h \
-		/usr/local/include/eigen3/Eigen/LU \
-		/usr/local/include/eigen3/Eigen/src/misc/Solve.h \
-		/usr/local/include/eigen3/Eigen/src/misc/Kernel.h \
-		/usr/local/include/eigen3/Eigen/src/misc/Image.h \
-		/usr/local/include/eigen3/Eigen/src/LU/FullPivLU.h \
-		/usr/local/include/eigen3/Eigen/src/LU/PartialPivLU.h \
-		/usr/local/include/eigen3/Eigen/src/LU/PartialPivLU_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/LU/Determinant.h \
-		/usr/local/include/eigen3/Eigen/src/LU/Inverse.h \
-		/usr/local/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/LU.h \
-		/usr/local/include/eigen3/Eigen/Cholesky \
-		/usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
-		/usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
-		/usr/local/include/eigen3/Eigen/src/Cholesky/LLT_MKL.h \
-		/usr/local/include/eigen3/Eigen/QR \
-		/usr/local/include/eigen3/Eigen/Jacobi \
-		/usr/local/include/eigen3/Eigen/src/Jacobi/Jacobi.h \
-		/usr/local/include/eigen3/Eigen/Householder \
-		/usr/local/include/eigen3/Eigen/src/Householder/Householder.h \
-		/usr/local/include/eigen3/Eigen/src/Householder/HouseholderSequence.h \
-		/usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h \
-		/usr/local/include/eigen3/Eigen/src/QR/HouseholderQR.h \
-		/usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h \
-		/usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h \
-		/usr/local/include/eigen3/Eigen/src/QR/HouseholderQR_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/QR.h \
-		/usr/local/include/eigen3/Eigen/Eigenvalues \
-		/usr/local/include/eigen3/Eigen/Geometry \
-		/usr/local/include/eigen3/Eigen/SVD \
-		/usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD.h \
-		/usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/SVD.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/EulerAngles.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Homogeneous.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/RotationBase.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Rotation2D.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Quaternion.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/AngleAxis.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Transform.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Translation.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Scaling.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Hyperplane.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/AlignedBox.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/Umeyama.h \
-		/usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/All.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/RotationBase.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Rotation2D.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Quaternion.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/AngleAxis.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Transform.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Translation.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Scaling.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/AlignedBox.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/Hyperplane.h \
-		/usr/local/include/eigen3/Eigen/src/Eigen2Support/Geometry/ParametrizedLine.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur_MKL.h \
-		/usr/local/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_MKL.h \
-		photo/photocamera.h \
-		../tucano-master/src/camera.hpp \
-		../tucano-master/src/shader.hpp \
-		../tucano-master/src/utils/misc.hpp \
-		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
-		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
-		../tucano-master/src/mesh.hpp \
-		../tucano-master/src/model.hpp \
-		../tucano-master/src/utils/objimporter.hpp \
-		../tucano-master/src/utils/plyimporter.hpp \
-		../tucano-master/src/utils/rply.hpp \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/QGLWidget \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qgl.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qopengl.h \
-		../../../../Qt/5.5/gcc_64/include/QtCore/qt_windows.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qopengles2ext.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qopenglext.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qpaintengine.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qpainter.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qtextoption.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qpen.h \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qglcolormap.h \
-		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qtopenglglobal.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/QSurfaceFormat \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qsurfaceformat.h \
-		../tucano-master/src/texture.hpp \
-		../tucano-master/src/texturemanager.hpp \
 		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QApplication \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qapplication.h \
@@ -3137,8 +2686,38 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtCore/qtcoreversion.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qxml.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/qtxmlversion.h \
-		photo/photomesh.h \
-		/usr/local/include/eigen3/Eigen/Eigen \
+		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
+		../build/ui/ui_mainwindow.h \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QVariant \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QAction \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qaction.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qactiongroup.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QApplication \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qapplication.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qguiapplication.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qinputmethod.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QButtonGroup \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qbuttongroup.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QHeaderView \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qheaderview.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractitemview.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qframe.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qstyleoption.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		../../../../Qt/5.5/gcc_64/include/QtGui/qvalidator.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qslider.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractslider.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qstyle.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qtabbar.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/qrubberband.h \
+		../../../../Qt/5.5/gcc_64/include/QtWidgets/QWidget \
+		glwidget.h \
+		../tucano-master/effects/phongshader.hpp \
+		../tucano-master/src/tucano.hpp \
+		../tucano-master/src/effect.hpp \
 		/usr/local/include/eigen3/Eigen/Dense \
 		/usr/local/include/eigen3/Eigen/Core \
 		/usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
@@ -3336,18 +2915,24 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur_MKL.h \
 		/usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur_MKL.h \
 		/usr/local/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_MKL.h \
-		photo/photocamera.h \
-		../tucano-master/src/camera.hpp \
 		../tucano-master/src/shader.hpp \
 		../tucano-master/src/utils/misc.hpp \
-		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
-		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
+		../tucano-master/src/bufferobject.hpp \
+		../tucano-master/src/texture.hpp \
+		../tucano-master/src/texturemanager.hpp \
+		../tucano-master/src/framebuffer.hpp \
 		../tucano-master/src/mesh.hpp \
 		../tucano-master/src/model.hpp \
+		../tucano-master/src/camera.hpp \
+		../build/bin/effects/multitextureshader.hpp \
+		../tucano-master/src/utils/qtflycamerawidget.hpp \
 		../tucano-master/src/utils/objimporter.hpp \
 		../tucano-master/src/utils/plyimporter.hpp \
 		../tucano-master/src/utils/rply.hpp \
+		../tucano-master/src/utils/flycamera.hpp \
+		../tucano-master/src/shapes/coordinateaxes.hpp \
+		../tucano-master/src/shapes/arrow.hpp \
+		../tucano-master/src/utils/trackball.hpp \
 		../../../../Qt/5.5/gcc_64/include/QtOpenGL/QGLWidget \
 		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qgl.h \
 		../../../../Qt/5.5/gcc_64/include/QtGui/qopengl.h \
@@ -3362,51 +2947,16 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtOpenGL/qtopenglglobal.h \
 		../../../../Qt/5.5/gcc_64/include/QtGui/QSurfaceFormat \
 		../../../../Qt/5.5/gcc_64/include/QtGui/qsurfaceformat.h \
-		../tucano-master/src/texture.hpp \
-		../tucano-master/src/texturemanager.hpp \
-		../../../../Qt/5.5/gcc_64/include/QtGui/QKeyEvent \
-		../build/ui/ui_mainwindow.h \
-		../../../../Qt/5.5/gcc_64/include/QtCore/QVariant \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/QAction \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qaction.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qactiongroup.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/QApplication \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qapplication.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qguiapplication.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qinputmethod.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/QButtonGroup \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qbuttongroup.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/QHeaderView \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qheaderview.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractitemview.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractscrollarea.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qframe.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qstyleoption.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractspinbox.h \
-		../../../../Qt/5.5/gcc_64/include/QtGui/qvalidator.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qslider.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qabstractslider.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qstyle.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qtabbar.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/qrubberband.h \
-		../../../../Qt/5.5/gcc_64/include/QtWidgets/QWidget \
-		glwidget.h \
-		../tucano-master/effects/phongshader.hpp \
-		../tucano-master/src/tucano.hpp \
-		../tucano-master/src/effect.hpp \
-		../tucano-master/src/bufferobject.hpp \
-		../tucano-master/src/framebuffer.hpp \
-		../tucano-master/src/utils/qtflycamerawidget.hpp \
-		../tucano-master/src/utils/flycamera.hpp \
-		../tucano-master/src/shapes/coordinateaxes.hpp \
-		../tucano-master/src/shapes/arrow.hpp \
-		../tucano-master/src/utils/trackball.hpp \
 		../../../../Qt/5.5/gcc_64/include/QtGui/QMouseEvent \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/QFileDialog \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qfiledialog.h \
 		../tucano-master/src/utils/qttrackballwidget.hpp \
+		photo/multiTextureManagerObj.h \
+		/usr/local/include/eigen3/Eigen/Eigen \
+		photo/photocamera.h \
+		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
+		../../../../Qt/5.5/gcc_64/include/QtXml/QDomNode \
+		../../../../Qt/5.5/gcc_64/include/QtCore/QList \
 		../../../../Qt/5.5/gcc_64/include/QtGui/QImage \
 		../tucano-master/effects/rendertexture.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/mainwindow.o mainwindow.cpp
@@ -3723,6 +3273,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../tucano-master/src/mesh.hpp \
 		../tucano-master/src/model.hpp \
 		../tucano-master/src/camera.hpp \
+		../build/bin/effects/multitextureshader.hpp \
 		../tucano-master/src/utils/qtflycamerawidget.hpp \
 		../tucano-master/src/utils/objimporter.hpp \
 		../tucano-master/src/utils/plyimporter.hpp \
@@ -3752,7 +3303,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtCore/qfileinfo.h \
 		../../../../Qt/5.5/gcc_64/include/QtWidgets/qdialog.h \
 		../tucano-master/src/utils/qttrackballwidget.hpp \
-		photo/photomesh.h \
+		photo/multiTextureManagerObj.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		photo/photocamera.h \
 		../../../../Qt/5.5/gcc_64/include/QtXml/QDomElement \
@@ -3892,7 +3443,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtCore/QTextStream
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/util.o util/util.cpp
 
-../build/obj/photomesh.o: photo/photomesh.cpp photo/photomesh.h \
+../build/obj/multiTextureManagerObj.o: photo/multiTextureManagerObj.cpp photo/multiTextureManagerObj.h \
 		/usr/local/include/eigen3/Eigen/Eigen \
 		/usr/local/include/eigen3/Eigen/Dense \
 		/usr/local/include/eigen3/Eigen/Core \
@@ -4234,7 +3785,7 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 		../../../../Qt/5.5/gcc_64/include/QtGui/qsurfaceformat.h \
 		../tucano-master/src/texture.hpp \
 		../tucano-master/src/texturemanager.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/photomesh.o photo/photomesh.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../build/obj/multiTextureManagerObj.o photo/multiTextureManagerObj.cpp
 
 ../build/obj/photocamera.o: photo/photocamera.cpp photo/photocamera.h \
 		../tucano-master/src/camera.hpp \

@@ -14,7 +14,7 @@ void GLWidget::initialize()
 
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    photoMesh.initializeFromMeshLab(QString("urna/urna.mlp"), QString("./urna/fotos/"));
+    multitexture.initializeFromMeshLab(QString("urna/urna.mlp"), QString("./urna/fotos/"));
 
     Tucano::QtTrackballWidget::initialize();
 
@@ -25,8 +25,11 @@ void GLWidget::initialize()
     renderTexture.setShadersDir(shaders_dir);
     renderTexture.initialize();
 
+    multi.setShadersDir(shaders_dir);
+    multi.initialize();
+
     calibrationCamera.setViewport(Eigen::Vector2f(this->size().width(), this->size().height()));
-    photoMesh.calibrateCamera(calibrationCamera);
+    multitexture.calibrateCamera(calibrationCamera);
 }
 
 void GLWidget::paintGL()
@@ -40,8 +43,11 @@ void GLWidget::paintGL()
     camera.render();
 
     glEnable(GL_DEPTH_TEST);
-    phong.render(*photoMesh.getMesh(), calibrationCamera, light_trackball);
+//    phong.render(*photoMesh.getMesh(), calibrationCamera, light_trackball);
 
-    glDisable(GL_DEPTH_TEST);
-    renderTexture.renderTexture(*photoMesh.getBaseTexture(), viewport);
+//    glDisable(GL_DEPTH_TEST);
+//    renderTexture.renderTexture(*photoMesh.getBaseTexture(), viewport);
+
+//    multi.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
+    multi.render(multitexture, calibrationCamera, light_trackball);
 }

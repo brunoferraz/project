@@ -19,7 +19,7 @@ BUILDDIR = $$TUCANO_PATH/../build/
 
 LIBS += -lGLEW -lGLU
 
-INCLUDEPATH +=  $$TUCANO_PATH/src $$TUCANO_PATH/effects $$EIGEN_PATH
+INCLUDEPATH +=  $$TUCANO_PATH/src $$TUCANO_PATH/effects $$EIGEN_PATH $$BUILDDIR/bin/effects
 
 OBJECTS_DIR =   $$BUILDDIR/obj
 MOC_DIR =       $$BUILDDIR/moc
@@ -33,23 +33,26 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     glwidget.cpp \
     util/util.cpp \
-    photo/photomesh.cpp \
+    photo/multiTextureManagerObj.cpp \
     photo/photocamera.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
-    $$BUILDDIR/bin/effects/phongshader.hpp \
     $$BUILDDIR/build/bin/effects/rendertexture.hpp \
     $$TUCANO_PATH/src/utils/qttrackballwidget.hpp \
     util/util.h \
-    photo/photomesh.h \
+    photo/multiTextureManagerObj.h \
     photo/photocamera.h \
-    $$TUCANO_PATH/src/utils/qtflycamerawidget.hpp
+    $$TUCANO_PATH/src/utils/qtflycamerawidget.hpp \
+    $$BUILDDIR/bin/effects/phongshader.hpp \
+    $$BUILDDIR/bin/effects/multitextureshader.hpp \
 
 OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/rendertexture.frag \
                $$BUILDDIR/bin/effects/shaders/phongshader.vert \
                $$BUILDDIR/bin/effects/shaders/phongshader.frag \
+               $$BUILDDIR/bin/effects/shaders/multitextureshader.vert \
+               $$BUILDDIR/bin/effects/shaders/multitextureshader.frag \
 
 FORMS    += mainwindow.ui
 
