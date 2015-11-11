@@ -1,6 +1,7 @@
 #ifndef PHOTOMESH_H
 #define PHOTOMESH_H
-#include <Eigen/Eigen>
+//#include <Eigen/Eigen>
+#include <eigen3/Eigen/Eigen>
 #include <photo/photocamera.h>
 #include <QList>
 #include <QString>

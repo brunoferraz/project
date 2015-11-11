@@ -5,11 +5,11 @@
 
 #include <QWidget>
 #include <phongshader.hpp>
-#include <multitextureshader.hpp>
-
 #include <utils/qtflycamerawidget.hpp>
 #include <utils/qttrackballwidget.hpp>
 #include <photo/multiTextureManagerObj.h>
+#include <multitextureshader.hpp>
+#include <pingpong.hpp>
 #include <QImage>
 #include <rendertexture.hpp>
 
@@ -22,6 +22,7 @@ public:
 
     Effects::Phong phong;
     Effects::MultiTexture multi;
+    Effects::PingPong pingpong;
 
     MultiTextureManagerObj multitexture;
     Tucano::Camera calibrationCamera;

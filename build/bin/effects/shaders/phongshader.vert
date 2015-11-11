@@ -1,4 +1,4 @@
-#version 130
+#version 150
 
 in vec4 in_Position;
 in vec3 in_Normal;
@@ -25,8 +25,8 @@ void main(void)
 {
 	mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-	mat4 normalMatrix = transpose(inverse(modelViewMatrix));
-    normal = normalize(vec3(normalMatrix * vec4(in_Normal,0.0)).xyz);
+        mat4 normalMatrix = transpose(inverse(modelViewMatrix));
+        normal = normalize(vec3(normalMatrix * vec4(in_Normal,0.0)).xyz);
 
 	vert = modelViewMatrix * in_Position;
 

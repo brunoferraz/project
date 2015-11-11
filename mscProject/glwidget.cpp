@@ -22,6 +22,9 @@ void GLWidget::initialize()
     phong.setShadersDir(shaders_dir);
     phong.initialize();
 
+    pingpong.setShadersDir(shaders_dir);
+    pingpong.initialize();
+
     renderTexture.setShadersDir(shaders_dir);
     renderTexture.initialize();
 
@@ -48,6 +51,9 @@ void GLWidget::paintGL()
 //    glDisable(GL_DEPTH_TEST);
 //    renderTexture.renderTexture(*photoMesh.getBaseTexture(), viewport);
 
-//    multi.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
-    multi.render(multitexture, calibrationCamera, light_trackball);
+//    multi.render(*multitexture.getMesh(), calibrationCamera, light_trackball); wrong
+
+
+//    multi.render(multitexture, calibrationCamera, light_trackball);
+      pingpong.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
 }

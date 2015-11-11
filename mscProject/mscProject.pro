@@ -11,11 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = mscProject
 TEMPLATE = app
 
-EIGEN_PATH  =  /usr/local/include/eigen3
+EIGEN_PATH  =  /usr/include/eigen3
 
-TUCANO_PATH = $$PWD/../tucano-master
+TUCANO_PATH = $$PWD/../../tucano
 
-BUILDDIR = $$TUCANO_PATH/../build/
+BUILDDIR = $$PWD/../build/
 
 LIBS += -lGLEW -lGLU
 
@@ -46,6 +46,7 @@ HEADERS  += mainwindow.h \
     $$TUCANO_PATH/src/utils/qtflycamerawidget.hpp \
     $$BUILDDIR/bin/effects/phongshader.hpp \
     $$BUILDDIR/bin/effects/multitextureshader.hpp \
+    $$BUILDDIR/bin/effects/pingpong.hpp \
 
 OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/rendertexture.frag \
@@ -55,6 +56,8 @@ OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/showFbo.frag \
                $$BUILDDIR/bin/effects/shaders/multitextureshader.vert \
                $$BUILDDIR/bin/effects/shaders/multitextureshader.frag \
+               $$BUILDDIR/bin/effects/shaders/pptf.vert \
+               $$BUILDDIR/bin/effects/shaders/pptf.frag \
 
 FORMS    += mainwindow.ui
 
