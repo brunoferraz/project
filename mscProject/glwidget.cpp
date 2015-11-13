@@ -15,6 +15,11 @@ void GLWidget::initialize()
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     multitexture.initializeFromMeshLab(QString("urna/urna.mlp"), QString("./urna/fotos/"));
+    vector<Eigen::Vector4f> nc;
+    for(int i =0; i < multitexture.getMesh()->getNumberOfVertices(); i++){
+        nc.push_back(Eigen::Vector4f(0.0, 1.0, 0.0, 1.0));
+    }
+    multitexture.getMesh()->createAttribute("nColor", nc);
 
     Tucano::QtTrackballWidget::initialize();
 
@@ -30,6 +35,9 @@ void GLWidget::initialize()
 
     multi.setShadersDir(shaders_dir);
     multi.initialize();
+
+    multitexttf.setShadersDir(shaders_dir);
+    multitexttf.initialize();
 
     calibrationCamera.setViewport(Eigen::Vector2f(this->size().width(), this->size().height()));
     multitexture.calibrateCamera(calibrationCamera);
@@ -55,5 +63,6 @@ void GLWidget::paintGL()
 
 
 //    multi.render(multitexture, calibrationCamera, light_trackball);
-      pingpong.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
+//      pingpong.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
+    multitexttf.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
 }

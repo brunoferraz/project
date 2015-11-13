@@ -9,6 +9,7 @@
 #include <utils/qttrackballwidget.hpp>
 #include <photo/multiTextureManagerObj.h>
 #include <multitextureshader.hpp>
+#include <multitexttf.hpp>
 #include <pingpong.hpp>
 #include <QImage>
 #include <rendertexture.hpp>
@@ -23,6 +24,7 @@ public:
     Effects::Phong phong;
     Effects::MultiTexture multi;
     Effects::PingPong pingpong;
+    Effects::MultiTextTF multitexttf;
 
     MultiTextureManagerObj multitexture;
     Tucano::Camera calibrationCamera;

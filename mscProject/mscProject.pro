@@ -47,6 +47,7 @@ HEADERS  += mainwindow.h \
     $$BUILDDIR/bin/effects/phongshader.hpp \
     $$BUILDDIR/bin/effects/multitextureshader.hpp \
     $$BUILDDIR/bin/effects/pingpong.hpp \
+    $$BUILDDIR/bin/effects/multitexttf.hpp \
 
 OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/rendertexture.frag \
@@ -58,6 +59,10 @@ OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/multitextureshader.frag \
                $$BUILDDIR/bin/effects/shaders/pptf.vert \
                $$BUILDDIR/bin/effects/shaders/pptf.frag \
+               $$BUILDDIR/bin/effects/shaders/mtextrender.vert \
+               $$BUILDDIR/bin/effects/shaders/mtextrender.frag \
+               $$BUILDDIR/bin/effects/shaders/multitf.vert \
+               $$BUILDDIR/bin/effects/shaders/multitf.frag \
 
 FORMS    += mainwindow.ui
 
