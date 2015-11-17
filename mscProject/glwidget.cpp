@@ -54,7 +54,7 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
     Eigen::Vector2i viewport (this->width(), this->height());
-    camera.render();
+//    camera.render();
 
     glEnable(GL_DEPTH_TEST);
 //    phong.render(*photoMesh.getMesh(), calibrationCamera, light_trackball);
@@ -67,8 +67,9 @@ void GLWidget::paintGL()
 
 //    multi.render(multitexture, calibrationCamera, light_trackball);
 //      pingpong.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
-    multitexttf.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
-    //    multitexttf.render(mesh, camera, light_trackball);
+//    multitexttf.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
+    multitexttf.render(multitexture, calibrationCamera, light_trackball);
+
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *ev)

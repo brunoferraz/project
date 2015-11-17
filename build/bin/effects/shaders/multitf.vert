@@ -8,6 +8,7 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+uniform sampler2D depthMapTexture;
 uniform sampler2D imageTexture;
 float near = 0.1;
 float far = 10000.0;
@@ -23,9 +24,10 @@ void main(void)
     texcoord /= texcoord.w;
     texcoord.xy = (texcoord.xy * 0.5) + 0.5;
 
-    vec4 color = vec4(0.0);
-    if(texture2D(imageTexture, texcoord.xy).z > depth - 0.0005){
-        color = vec4(1.0);
+    vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+    if(texture2D(depthMapTexture, texcoord.xy).z > depth - 0.0005){
+//        color = vec4(1.0);
+        color  = texture2D(imageTexture, texcoord.xy);
     }
     nColor = color;
 }

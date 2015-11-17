@@ -26,6 +26,7 @@
 #include <tucano.hpp>
 #include <camera.hpp>
 #include <QDebug>
+#include <photo/multiTextureManagerObj.h>
 
 using namespace Tucano;
 
@@ -177,6 +178,38 @@ public:
         fbo->unbindAttachments();
     }
 
+    void updateTF (MultiTextureManagerObj& multiTex, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
+        qDebug() << "updateTF 0";
+        Mesh &mesh = *multiTex.getMesh();
+        Eigen::Vector2f viewport = Eigen::Vector2f(camera.getViewport()[2], camera.getViewport()[3]);
+
+        multiTF.bind();
+            glEnable(GL_RASTERIZER_DISCARD);
+
+                multiTF.setUniform("in_Viewport", viewport);
+                multiTF.setUniform("projectionMatrix", camera.getProjectionMatrix());
+                multiTF.setUniform("modelMatrix", mesh.getModelMatrix());
+                multiTF.setUniform("viewMatrix", camera.getViewMatrix());
+                multiTF.setUniform("depthMapTexture", fbo->bindAttachment(depthTextureID));
+                multiTF.setUniform("imageTexture", multiTex.getBaseTexture()->bind());
+                mesh.bindBuffers();
+
+                mesh.getAttribute("nColor")->disable();
+                mesh.getAttribute("in_Position")->enable();
+                mesh.getAttribute("in_Position")->enable(multiTF.getAttributeLocation("in_Position"));
+                    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mesh.getAttribute("nColor")->getBufferID());
+                        glBeginTransformFeedback(GL_POINTS);
+                            glEnable(GL_DEPTH_TEST);
+                            mesh.renderPoints();
+                        glEndTransformFeedback();
+                    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+                mesh.unbindBuffers();
+            glDisable(GL_RASTERIZER_DISCARD);
+        multiTF.unbind();
+        fbo->unbindAttachments();
+    }
+
     void render (Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
     {
         if(firstFlag){
@@ -185,7 +218,31 @@ public:
             updateTF(mesh, camera, lightTrackball);
             firstFlag = false;
         }
+        renderSimple(mesh, camera, lightTrackball);
+    }
+    void render (MultiTextureManagerObj& multiTex, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
+        if(firstFlag){
+            depthMapRender(*multiTex.getMesh(), camera, lightTrackball);
+            updateTF(multiTex, camera, lightTrackball);
+            firstFlag = false;
+        }
+        renderSimple(*multiTex.getMesh(), camera, lightTrackball);
+    }
 
+    void renderFbo(Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
+        showFBO.bind();
+        showFBO.setUniform("imageTexture", fbo->bindAttachment(depthTextureID));
+
+        quad.render();
+
+        showFBO.unbind();
+        fbo->unbindAttachments();
+    }
+
+    void renderSimple(Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
         Eigen::Vector4f viewport = camera.getViewport();
         glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 
@@ -214,18 +271,6 @@ public:
         mesh.unbindBuffers();
 
         multiTextRender.unbind();
-
-    }
-
-    void renderFbo(Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
-    {
-        showFBO.bind();
-        showFBO.setUniform("imageTexture", fbo->bindAttachment(depthTextureID));
-
-        quad.render();
-
-        showFBO.unbind();
-        fbo->unbindAttachments();
     }
 };
 
