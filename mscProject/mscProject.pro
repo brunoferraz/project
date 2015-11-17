@@ -63,6 +63,9 @@ OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/mtextrender.frag \
                $$BUILDDIR/bin/effects/shaders/multitf.vert \
                $$BUILDDIR/bin/effects/shaders/multitf.frag \
+               $$BUILDDIR/bin/effects/shaders/depthmap.vert \
+               $$BUILDDIR/bin/effects/shaders/depthmap.frag \
+
 
 FORMS    += mainwindow.ui
 

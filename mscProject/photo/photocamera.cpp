@@ -102,7 +102,7 @@ void PhotoCamera::buildProjection()
 //      cout << "fov: " << fov << endl;
 //      cout << "ratio: " << ratio << endl;
 
-      Eigen::Matrix4f perspective = Eigen::Matrix4f::Identity();
+      Eigen::Matrix4f perspective = Eigen::Matrix4f::Zero();
       perspective(0,0) = f/ratio;
       perspective(1,1) = f;
       perspective(2,2) = (far + near)/(near - far);

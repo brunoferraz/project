@@ -8,6 +8,7 @@
 #include <photo/multiTextureManagerObj.h>
 #include <QKeyEvent>
 #include <QDebug>
+#include <QMouseEvent>
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private:
     Ui::MainWindow *ui;
 protected:
     void keyReleaseEvent(QKeyEvent *ev);
+//    void mouseReleaseEvent(QMouseEvent *ev);
 };
 
 #endif // MAINWINDOW_H

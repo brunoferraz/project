@@ -39,14 +39,23 @@ class MultiTextTF : public Effect
 {
 
 private:
+    Framebuffer *fbo;
 
     /// Phong Shader
     Shader multiTextRender;
     Shader multiTF;
+    Shader depthMap;
+
+    Shader showFBO;
 
 	/// Default color
 	Eigen::Vector4f default_color;
 
+    int depthTextureID;
+
+    Mesh quad;
+
+    bool firstFlag;
 public:
 
     /**
@@ -55,18 +64,27 @@ public:
     MultiTextTF (void)
     {
 		default_color << 0.7, 0.7, 0.7, 1.0;
+        fbo             = 0;
+        depthTextureID  = 0;
+        firstFlag       = true;
     }
 
     /**
      * @brief Default destructor
      */
-    virtual ~MultiTextTF (void) {}
+    virtual ~MultiTextTF (void) {
+        delete fbo;
+    }
 
     /**
      * @brief Load and initialize shaders
      */
     virtual void initialize (void)
     {
+        loadShader(depthMap, "depthmap");
+        loadShader(showFBO, "showFbo");
+
+
         multiTF.load("multitf", shaders_dir);
         const char* vars[] = {"nColor"};
         multiTF.initializeTF(1, vars);
@@ -74,6 +92,9 @@ public:
 
         // searches in default shader directory (/shaders) for shader files phongShader.(vert,frag,geom,comp)
         loadShader(multiTextRender, "mtextrender") ;
+
+        fbo = new Framebuffer();
+        quad.createQuad();
     }
 
 	/**
@@ -89,13 +110,56 @@ public:
      * @param camera Given camera 
      * @param lightTrackball Given light camera 
      */
+    void depthMapRender (Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
+        Eigen::Vector4f viewPort = camera.getViewport();
+        Eigen::Vector2i viewport_size = camera.getViewportSize();
+        int size = 1;
+        viewPort << 0, 0, viewport_size[0] * size, viewport_size[1] * size;
+        glViewport(viewPort[0], viewPort[1], viewPort[2], viewPort[3]);
+
+        if(fbo->getWidth() != viewport_size[0] || fbo->getHeight() != viewport_size[1])
+        {
+            fbo->create(viewport_size[0], viewport_size[1], 1);
+        }
+
+        fbo->clearAttachments();
+        fbo->bindRenderBuffer(depthTextureID);
+
+            depthMap.bind();
+
+            depthMap.setUniform("projectionMatrix", camera.getProjectionMatrix());
+            depthMap.setUniform("modelMatrix", mesh.getModelMatrix());
+            depthMap.setUniform("viewMatrix", camera.getViewMatrix());
+
+            mesh.setAttributeLocation(depthMap);
+
+            glEnable(GL_DEPTH_TEST);
+            mesh.render();
+//            mesh.bindBuffers();
+//            mesh.renderPoints();
+//            mesh.unbindBuffers();
+
+            depthMap.unbind();
+
+        fbo->unbind();
+        fbo->clearDepth();
+    }
+
     void updateTF (Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
     {
         qDebug() << "updateTF 0";
+
+        Eigen::Vector2f viewport = Eigen::Vector2f(camera.getViewport()[2], camera.getViewport()[3]);
+
         multiTF.bind();
             glEnable(GL_RASTERIZER_DISCARD);
 
-                multiTF.setUniform("adjustment", 1 -mesh.getScale());
+                multiTF.setUniform("in_Viewport", viewport);
+                multiTF.setUniform("projectionMatrix", camera.getProjectionMatrix());
+                multiTF.setUniform("modelMatrix", mesh.getModelMatrix());
+                multiTF.setUniform("viewMatrix", camera.getViewMatrix());
+                multiTF.setUniform("imageTexture", fbo->bindAttachment(depthTextureID));
                 mesh.bindBuffers();
 
                 mesh.getAttribute("nColor")->disable();
@@ -110,11 +174,17 @@ public:
                 mesh.unbindBuffers();
             glDisable(GL_RASTERIZER_DISCARD);
         multiTF.unbind();
+        fbo->unbindAttachments();
     }
 
     void render (Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
     {
-        updateTF(mesh, camera, lightTrackball);
+        if(firstFlag){
+            depthMapRender(mesh, camera, lightTrackball);
+            //renderFbo(mesh, camera, lightTrackball);
+            updateTF(mesh, camera, lightTrackball);
+            firstFlag = false;
+        }
 
         Eigen::Vector4f viewport = camera.getViewport();
         glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
@@ -145,6 +215,17 @@ public:
 
         multiTextRender.unbind();
 
+    }
+
+    void renderFbo(Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
+        showFBO.bind();
+        showFBO.setUniform("imageTexture", fbo->bindAttachment(depthTextureID));
+
+        quad.render();
+
+        showFBO.unbind();
+        fbo->unbindAttachments();
     }
 };
 

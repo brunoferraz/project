@@ -22,3 +22,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *ev)
         ui->widget->nextCamera();
     }
 }
+
+//void MainWindow::mouseReleaseEvent(QMouseEvent *ev)
+//{
+//    qDebug() << ev->button();
+//}

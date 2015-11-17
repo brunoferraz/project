@@ -3,12 +3,29 @@
 in vec4 in_Position;
 out vec4 nColor;
 
-uniform float adjustment;
+uniform vec2 in_Viewport;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 
+uniform sampler2D imageTexture;
+float near = 0.1;
+float far = 10000.0;
 
 void main(void)
 {
-    //nPos = vec4(inPos.xyz + vec3(0.001, 0.001,0), 1.0);
-    vec4 norm = normalize(in_Position);
-    nColor = norm;
+    vec4 proj = viewMatrix * modelMatrix * in_Position;
+    // to normalize between 0 and 1;
+    float depth  = -(proj.z - near) / (far - near);
+
+    // divide by W and normalize between 0 and 1;
+    vec4 texcoord = projectionMatrix * proj;
+    texcoord /= texcoord.w;
+    texcoord.xy = (texcoord.xy * 0.5) + 0.5;
+
+    vec4 color = vec4(0.0);
+    if(texture2D(imageTexture, texcoord.xy).z > depth - 0.0005){
+        color = vec4(1.0);
+    }
+    nColor = color;
 }

@@ -22,6 +22,7 @@ void GLWidget::initialize()
     multitexture.getMesh()->createAttribute("nColor", nc);
 
     Tucano::QtTrackballWidget::initialize();
+//    Tucano::QtTrackballWidget::openMesh("./models/toy.obj");
 
     string shaders_dir("./effects/shaders/");
     phong.setShadersDir(shaders_dir);
@@ -41,6 +42,8 @@ void GLWidget::initialize()
 
     calibrationCamera.setViewport(Eigen::Vector2f(this->size().width(), this->size().height()));
     multitexture.calibrateCamera(calibrationCamera);
+    multitexture.calibrateCamera(camera);
+    multitexture.getMesh()->setModelMatrix(Eigen::Affine3f::Identity());
 }
 
 void GLWidget::paintGL()
@@ -65,4 +68,14 @@ void GLWidget::paintGL()
 //    multi.render(multitexture, calibrationCamera, light_trackball);
 //      pingpong.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
     multitexttf.render(*multitexture.getMesh(), calibrationCamera, light_trackball);
+    //    multitexttf.render(mesh, camera, light_trackball);
+}
+
+void GLWidget::mouseReleaseEvent(QMouseEvent *ev)
+{
+//    multitexture.calibrateCamera(camera);
+//    calibrationCamera.setProjectionMatrix(camera.getProjectionMatrix());
+//    calibrationCamera.setViewMatrix(camera.getViewMatrix());
+
+//    update();
 }

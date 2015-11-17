@@ -36,10 +36,12 @@ public:
     void paintGL();
     inline void nextCamera(){ multitexture.nextPhoto();
                               multitexture.calibrateCamera(calibrationCamera);
+                              multitexture.calibrateCamera(camera);
                               update();
                             }
     inline void prevCamera(){ multitexture.prevPhoto();
                               multitexture.calibrateCamera(calibrationCamera);
+                              multitexture.calibrateCamera(camera);
                               update();
                             }
 signals:
@@ -48,6 +50,8 @@ private:
     Texture image_Texture;
 
 public slots:
+protected:
+    void mouseReleaseEvent(QMouseEvent *ev);
 };
 
 #endif // GLWIDGET_H
