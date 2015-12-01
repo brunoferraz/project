@@ -71,6 +71,8 @@ OTHER_FILES += $$BUILDDIR/bin/effects/shaders/rendertexture.vert \
                $$BUILDDIR/bin/effects/shaders/coordtf.frag \
                $$BUILDDIR/bin/effects/shaders/coordtextrender.vert \
                $$BUILDDIR/bin/effects/shaders/coordtextrender.frag \
+               $$BUILDDIR/bin/effects/shaders/coordtextrendermpass.vert \
+               $$BUILDDIR/bin/effects/shaders/coordtextrendermpass.frag \
 
 
 

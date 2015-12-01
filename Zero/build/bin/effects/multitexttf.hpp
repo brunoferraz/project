@@ -44,10 +44,12 @@ class MultiTextTF : public Effect
 
 private:
     Framebuffer *fbo;
+    Framebuffer *mPassFbo;
 
     /// Phong Shader
     Shader multiTextRender;
     Shader multiTF;
+    Shader mPassRender;
 
     Shader simpleTF;
     Shader simpleTextRender;
@@ -60,6 +62,9 @@ private:
 
     int depthTextureID;
     int textureID;
+    int mergeColorID;
+
+    int loopTextCount;
 
     Mesh quad;
 
@@ -75,9 +80,12 @@ public:
     {
 		default_color << 0.7, 0.7, 0.7, 1.0;
         fbo             = 0;
+        mPassFbo        = 0;
         depthTextureID  = 0;
+        mergeColorID    = 1;
         firstFlag       = true;
         textureID = -1;
+        loopTextCount   = 4;
     }
 
     /**
@@ -85,6 +93,7 @@ public:
      */
     virtual ~MultiTextTF (void) {
         delete fbo;
+        delete mPassFbo;
     }
 
     /**
@@ -110,10 +119,13 @@ public:
         multiTF.initializeTF(1, vars);
         shaders_list.push_back(&multiTF);
 
+        loadShader(mPassRender, "coordtextrendermpass");
+
 
 
 
         fbo = new Framebuffer();
+        mPassFbo = new Framebuffer();
         quad.createQuad();
     }
 
@@ -294,9 +306,8 @@ public:
         if(firstFlag){
               Tucano::Camera cam;
               cam.setViewport(camera.getViewport());
-//            for(int i = 0; i< multiTex.getNumPhotos(); i++){
-            for(int i = 0; i< 4; i++){
-
+            loopTextCount = multiTex.getNumPhotos();
+            for(int i = 0; i< loopTextCount; i++){
                 multiTex.calibrateCamera(cam);
                 depthMapRender(*multiTex.getMesh(), cam, lightTrackball);
                 updateTF(multiTex, cam, lightTrackball);
@@ -306,22 +317,56 @@ public:
             firstFlag = false;
         }
         renderMulti(multiTex, camera, lightTrackball);
+//        renderMultiPass(multiTex, camera, lightTrackball);
 //        renderSimple(*multiTex.getMesh(), camera, lightTrackball);
     }
 
     void renderFbo(Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
     {
         showFBO.bind();
-        showFBO.setUniform("imageTexture", fbo->bindAttachment(depthTextureID));
+        showFBO.setUniform("imageTexture", mPassFbo->bindAttachment(mergeColorID));
 
         quad.render();
 
         showFBO.unbind();
         fbo->unbindAttachments();
     }
+    void renderMultiPass(MultiTextureManagerObj& multiTex, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
+    {
+        Mesh &mesh = *multiTex.getMesh();
+        Eigen::Vector4f viewPort = camera.getViewport();
+        Eigen::Vector2i viewport_size = camera.getViewportSize();
+        int size = 1;
+        viewPort << 0, 0, viewport_size[0] * size, viewport_size[1] * size;
+        glViewport(viewPort[0], viewPort[1], viewPort[2], viewPort[3]);
 
+        if(mPassFbo->getWidth() != viewport_size[0] || mPassFbo->getHeight() != viewport_size[1])
+        {
+            mPassFbo->create(viewport_size[0], viewport_size[1], 1);
+        }
+
+        mPassFbo->clearAttachments();
+        mPassFbo->bindRenderBuffer(mergeColorID);
+
+            mPassRender.bind();
+            mPassRender.setUniform("projectionMatrix", camera.getProjectionMatrix());
+            mPassRender.setUniform("modelMatrix", mesh.getModelMatrix());
+            mPassRender.setUniform("viewMatrix", camera.getViewMatrix());
+
+            mesh.setAttributeLocation(mPassRender);
+            mesh.render();
+
+            mPassRender.unbind();
+
+        mPassFbo->unbind();
+        mPassFbo->clearDepth();
+
+        renderFbo(mesh, camera, lightTrackball);
+
+    }
     void renderMulti(MultiTextureManagerObj& multiTex, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
     {
+
         Eigen::Vector4f viewport = camera.getViewport();
         glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
         Mesh &mesh = *multiTex.getMesh();
@@ -333,27 +378,30 @@ public:
         multiTextRender.setUniform("modelMatrix", mesh.getModelMatrix());
         multiTextRender.setUniform("viewMatrix", camera.getViewMatrix());
         multiTextRender.setUniform("lightViewMatrix", lightTrackball.getViewMatrix());
-        multiTextRender.setUniform("has_color", mesh.hasAttribute("in_Color"));
-        multiTextRender.setUniform("default_color", default_color);
+//        multiTextRender.setUniform("has_color", mesh.hasAttribute("in_Color"));
+//        multiTextRender.setUniform("default_color", default_color);
+//        multiTextRender.setUniform("imgNum", loops);
 
-        int loops = 4;
-        for(int i = 0; i < loops; i++){
+        for(int i = 0; i < loopTextCount; i++){
             string id = "imageTexture_";
             id += std::to_string(i);
             textureID = multiTex.getBaseTextureAt(i)->bind();
             multiTextRender.setUniform(id.c_str(), textureID);
+//            qDebug() << id.c_str() << "  " << textureID;
         }
-        cout << textureID << endl;
 //        mesh.setAttributeLocation(multiTextRender);
 
         mesh.getAttribute("in_Position")->enable(multiTextRender.getAttributeLocation("in_Position"));
         mesh.getAttribute("in_Normal")->enable(multiTextRender.getAttributeLocation("in_Normal"));
+        qDebug() <<  mesh.hasAttribute("imageID_"+std::to_string(4));
 
-        for(int i = 0; i <loops; i++){
+        for(int i = 0; i <loopTextCount; i++){
             string incoord = "in_coordText_";
             incoord += std::to_string(i);
+//            qDebug() << incoord.c_str() << "  "  << multiTextRender.getAttributeLocation(incoord.c_str());
             mesh.getAttribute("imageID_"+std::to_string(i))->enable(multiTextRender.getAttributeLocation(incoord.c_str()));
         }
+
 
         glEnable(GL_DEPTH_TEST);
 
@@ -361,20 +409,10 @@ public:
         mesh.renderElements();
         mesh.unbindBuffers();
 
-        for(int i = 0; i < loops; i++){
+        for(int i = 0; i < loopTextCount; i++){
             multiTex.getBaseTextureAt(i)->unbind();
         }
         multiTextRender.unbind();
-
-
-//        qDebug() << "inPosition " << multiTextRender.getAttributeLocation("in_Position");
-
-//        vector<string> log;
-//        multiTextRender.getActiveAttributes(log);
-//        for(int i = 0; i < log.size(); i++)
-//        {
-//            qDebug() << log.at(i).c_str();
-//        }
     }
 
     void renderSimple(Tucano::Mesh& mesh, const Tucano::Camera& camera, const Tucano::Camera& lightTrackball)
